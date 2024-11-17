@@ -3,11 +3,11 @@ import pandas as pd
 from dash import Dash, dcc, html, Input, Output, State
 import plotly.express as px
 import os
-
 # Initialize the Dash application
 app = Dash(__name__)
-server = app.server  # Important: This is for Render/PythonAnywhere deployment
-
+server = app.server  # Important: This is for Render deployment
+# Add port configuration
+port = int(os.environ.get("PORT", 10000))
 def load_data():
     """
     Load and process the disaster data from JSON file
@@ -242,7 +242,7 @@ def update_map_and_stats(selected_year, selected_type, relayout_data, map_state)
     total_deaths = filtered_df['Total Deaths'].sum()
     total_damage = filtered_df['Total Damage'].sum()
     
-    # Create statistics panel
+  # Create statistics panel
     stats_panel = html.Div([
         html.Div([
             html.H3(f"Year: {selected_year}", style={'color': '#2c3e50'}),
@@ -258,3 +258,7 @@ def update_map_and_stats(selected_year, selected_type, relayout_data, map_state)
     ])
     
     return fig, stats_panel, map_state
+
+# Run the server
+if __name__ == '__main__':
+    app.run_server(host='0.0.0.0', port=port)
